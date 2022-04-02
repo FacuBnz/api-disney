@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "peliculas")
+@Table(name = "movies")
 @Setter
 @Getter
 public class Movie {
@@ -18,16 +18,16 @@ public class Movie {
     private Integer id;
 
     @Column(unique = true, nullable = false)
-    private String titulo;
-    private String imagen;
-    private LocalDate fechaCreacion;
-    private Integer calificacion;
+    private String title;
+    private String image;
+    private LocalDate created_at;
+    private Integer calification;
 
     @ManyToMany
     @JoinTable(
             name = "movies_characters",
-            joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "character_id")
+            joinColumns = @JoinColumn(name = "movies_id"),
+            inverseJoinColumns = @JoinColumn(name = "characters_id")
     )
     @JsonIgnoreProperties(value="movies")
     private List<Character> characters;
