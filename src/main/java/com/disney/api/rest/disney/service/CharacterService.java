@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CharacterService {
@@ -28,5 +29,59 @@ public class CharacterService {
         Character p = characterRepository.findById(Integer.valueOf(id)).orElseThrow(() ->
                 new Exception(String.format("Character not found", id)));
         return MappperDTO.convertToCharacterDTO(p);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CharacterDTO> getSearch(Map<String, String> params) throws Exception {
+        String name = null;
+        Integer age = null;
+        Integer idMovie = null;
+        Double weight = null;
+        List<Character> pers;
+
+        for (Map.Entry<String, String> param : params.entrySet()) {
+            if(param.getKey().equalsIgnoreCase("name")) name = param.getValue();
+            if(param.getKey().equalsIgnoreCase("age")) age = Integer.parseInt(param.getValue());
+            if(param.getKey().equalsIgnoreCase("idMovie")) idMovie = Integer.parseInt(param.getValue());
+            if(param.getKey().equalsIgnoreCase("weight")) weight = Double.valueOf(param.getValue());
+        }
+
+        if(name != null){
+
+            if(age != null){
+
+                if(idMovie != null){
+
+                    if(weight != null){
+                        //name, age, idmovie, weight
+                        pers = characterRepository.findCharacterByNameAndAgeAndWeightAndMovies(name, age, weight, idMovie);
+                        MappperDTO.convertToCharacterDTO(pers);
+                    }
+                    //name, age, idmovie
+                    pers = characterRepository.findCharacterByNameAndAgeAndMovies(name, age, idMovie);
+                    return MappperDTO.convertToCharacterDTO(pers);
+                }
+
+                pers = characterRepository.findCharacterByNameAndAge(name, age);
+                return MappperDTO.convertToCharacterDTO(pers);
+
+            }else if(idMovie != null){
+
+                if(weight != null){
+                    //name, idMovie, weight
+                    pers = characterRepository.findCharacterByNameAndWeightAndMovies(name, weight, idMovie);
+                    MappperDTO.convertToCharacterDTO(pers);
+                }
+                pers = characterRepository.findCharacterByNameAndMovies(name, idMovie);
+                return MappperDTO.convertToCharacterDTO(pers);
+            }else if(weight != null){
+                pers = characterRepository.findCharacterByNameAndWeight(name, weight);
+                return MappperDTO.convertToCharacterDTO(pers);
+            }
+            pers = characterRepository.findCharacterByName(name);
+            return MappperDTO.convertToCharacterDTO(pers);
+        }
+
+        throw new Exception("Invalid parameters");
     }
 }
