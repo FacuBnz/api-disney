@@ -104,4 +104,11 @@ public class CharacterService {
         characterRepository.save(p);
         return "Character edited successfully";
     }
+
+    @Transactional
+    public String delete(Integer id) throws Exception {
+        characterRepository.findById(id).orElseThrow(() -> new Exception(String.format("The character not found", id)));
+        characterRepository.deleteById(id);
+        return "Character eliminated successfully";
+    }
 }
