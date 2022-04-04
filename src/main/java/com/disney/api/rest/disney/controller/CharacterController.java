@@ -62,4 +62,22 @@ public class CharacterController {
                     .body(res);
         }
     }
+
+    @PutMapping
+    public ResponseEntity<?> update(@Valid @RequestBody Character character){
+        try{
+            String message = characterService.update(character);
+            Response res = new Response();
+            res.setMessage(message);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(res);
+        }catch (Exception e){
+            Response res = new Response();
+            res.setMessage(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(res);
+        }
+    }
 }
