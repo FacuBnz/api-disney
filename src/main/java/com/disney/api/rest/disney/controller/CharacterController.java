@@ -5,10 +5,9 @@ import com.disney.api.rest.disney.service.CharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/characters")
@@ -18,9 +17,10 @@ public class CharacterController {
     private CharacterService characterService;
 
     @GetMapping
-    public ResponseEntity<?> getAll(){
+    public ResponseEntity<?> getCharacters(@RequestParam() Map<String, String> params){
         try{
-            return ResponseEntity.ok(characterService.getAll());
+            if(params.isEmpty()) return ResponseEntity.ok(characterService.getAll());
+            return ResponseEntity.ok(characterService.getSearch(params));
         }catch (Exception e){
             Response res = new Response();
             res.setMessage(e.getMessage());
