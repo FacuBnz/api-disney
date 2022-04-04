@@ -1,12 +1,14 @@
 package com.disney.api.rest.disney.controller;
 
 import com.disney.api.rest.disney.config.Response;
+import com.disney.api.rest.disney.entity.Character;
 import com.disney.api.rest.disney.service.CharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -43,5 +45,21 @@ public class CharacterController {
         }
     }
 
-
+    @PostMapping
+    public ResponseEntity<?> create(@Valid @RequestBody Character character){
+        try{
+            String message = characterService.create(character);
+            Response res = new Response();
+            res.setMessage(message);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(res);
+        }catch (Exception e){
+            Response res = new Response();
+            res.setMessage(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(res);
+        }
+    }
 }
