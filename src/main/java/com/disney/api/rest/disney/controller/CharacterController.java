@@ -80,4 +80,20 @@ public class CharacterController {
                     .body(res);
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id){
+        try{
+            String message = characterService.delete(id);
+            Response res = new Response();
+            res.setMessage(message);
+            return ResponseEntity.ok(res);
+        }catch (Exception e){
+            Response res = new Response();
+            res.setMessage(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(res);
+        }
+    }
 }
