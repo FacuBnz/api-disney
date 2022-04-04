@@ -84,4 +84,10 @@ public class CharacterService {
 
         throw new Exception("Invalid parameters");
     }
+
+    @Transactional
+    public String create(Character c){
+        characterRepository.save(c);
+        return "Character created successfully";
+    }
 }
