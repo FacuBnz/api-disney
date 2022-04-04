@@ -90,4 +90,18 @@ public class CharacterService {
         characterRepository.save(c);
         return "Character created successfully";
     }
+
+    @Transactional
+    public String update(Character c) throws Exception {
+        Character p = characterRepository.findById(c.getId()).orElseThrow(() -> new Exception(String.format("The character not found", c.getId())));
+
+        p.setName(c.getName());
+        p.setHistory(c.getHistory());
+        p.setAge(c.getAge());
+        p.setImage(c.getImage());
+        p.setWeight(c.getWeight());
+        p.setMovies(c.getMovies());
+        characterRepository.save(p);
+        return "Character edited successfully";
+    }
 }
