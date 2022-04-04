@@ -8,6 +8,7 @@ import java.util.List;
 @Setter
 @Getter
 public class CharacterDetailsDTO {
+    private Integer id;
     private String name;
     private String image;
     private Integer age;

@@ -6,6 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CharacterDTO {
+    private Integer id;
     private String name;
     private String image;
 }

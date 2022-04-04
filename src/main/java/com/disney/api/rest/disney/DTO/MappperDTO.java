@@ -13,6 +13,7 @@ public class MappperDTO {
 
         for(Character charactr: pers){
             CharacterDTO dto = new CharacterDTO();
+            dto.setId(charactr.getId());
             dto.setName(charactr.getName());
             dto.setImage(charactr.getImage());
             dtos.add(dto);
@@ -22,6 +23,7 @@ public class MappperDTO {
 
     public static CharacterDetailsDTO convertToCharacterDTO(Character p){
         CharacterDetailsDTO dto = new CharacterDetailsDTO();
+        dto.setId(p.getId());
         dto.setName(p.getName());
         dto.setImage(p.getImage());
         dto.setWeight(p.getWeight());
@@ -32,7 +34,6 @@ public class MappperDTO {
 
         for(Movie m : p.getMovies()){
             MovieDTO mov = new MovieDTO();
-            System.out.println(m.getTitle());
             mov.setTitle(m.getTitle());
             mov.setImage(m.getImage());
             mov.setCreated_at(m.getCreated_at());
