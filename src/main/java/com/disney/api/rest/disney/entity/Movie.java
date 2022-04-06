@@ -20,10 +20,10 @@ public class Movie {
     @Column(unique = true, nullable = false)
     private String title;
     private String image;
-    private LocalDate created_at;
+    private LocalDate createdAt;
     private Integer calification;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "movies_characters",
             joinColumns = @JoinColumn(name = "movies_id"),
