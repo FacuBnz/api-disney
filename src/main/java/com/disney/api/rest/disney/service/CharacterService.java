@@ -18,20 +18,20 @@ public class CharacterService {
     @Autowired
     private CharacterRepository characterRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<CharacterDTO> getAll(){
         List<Character> characters = characterRepository.findAll();
         return MappperDTO.convertToCharacterDTO(characters);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public CharacterDetailsDTO findById(String id) throws Exception {
         Character p = characterRepository.findById(Integer.valueOf(id)).orElseThrow(() ->
                 new Exception(String.format("Character not found", id)));
         return MappperDTO.convertToCharacterDTO(p);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<CharacterDTO> getSearch(Map<String, String> params) throws Exception {
         String name = null;
         Integer age = null;
