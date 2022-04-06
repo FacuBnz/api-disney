@@ -36,7 +36,7 @@ public class MappperDTO {
             MovieDTO mov = new MovieDTO();
             mov.setTitle(m.getTitle());
             mov.setImage(m.getImage());
-            mov.setCreated_at(m.getCreated_at());
+            mov.setCreated_at(m.getCreatedAt());
 
             movies.add(mov);
         }
@@ -45,5 +45,32 @@ public class MappperDTO {
         return dto;
 
     }
+
+    public static List<MovieDTO> convertToMovieDTO(List<Movie> movies){
+        List<MovieDTO> dtos = new ArrayList<>();
+
+        for (Movie m : movies) {
+            MovieDTO mdto = new MovieDTO();
+            mdto.setId(m.getId());
+            mdto.setTitle(m.getTitle());
+            mdto.setImage(m.getImage());
+            mdto.setCreated_at(m.getCreatedAt());
+
+            dtos.add(mdto);
+        }
+        return dtos;
+    }
+
+    public static MovieDetailsDTO convertToMovieDTO(Movie m){
+        MovieDetailsDTO mdto = new MovieDetailsDTO();
+        mdto.setTitle(m.getTitle());
+        mdto.setImage(m.getImage());
+        mdto.setCreated_at(m.getCreatedAt());
+        mdto.setCalification(m.getCalification());
+        mdto.setCharacters(convertToCharacterDTO(m.getCharacters()));
+        mdto.setGenre(m.getGenre().getName());
+        return mdto;
+    }
+
 }
 
