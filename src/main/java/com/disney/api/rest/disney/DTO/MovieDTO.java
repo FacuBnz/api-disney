@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Setter
 @Getter
 public class MovieDTO {
-    private Integer id;
     private String title;
     private String image;
     private LocalDate created_at;

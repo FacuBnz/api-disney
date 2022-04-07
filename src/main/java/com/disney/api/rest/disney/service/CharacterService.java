@@ -46,7 +46,7 @@ public class CharacterService {
         for (Map.Entry<String, String> param : params.entrySet()) {
             if(param.getKey().equalsIgnoreCase("name")) name = param.getValue();
             if(param.getKey().equalsIgnoreCase("age")) age = Integer.parseInt(param.getValue());
-            if(param.getKey().equalsIgnoreCase("idMovie")) idMovie = Integer.parseInt(param.getValue());
+            if(param.getKey().equalsIgnoreCase("movie")) idMovie = Integer.parseInt(param.getValue());
             if(param.getKey().equalsIgnoreCase("weight")) weight = Double.valueOf(param.getValue());
         }
 
