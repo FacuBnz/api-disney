@@ -3,12 +3,12 @@ package com.disney.api.rest.disney.service;
 import com.disney.api.rest.disney.DTO.MappperDTO;
 import com.disney.api.rest.disney.DTO.MovieDTO;
 import com.disney.api.rest.disney.DTO.MovieDetailsDTO;
-import com.disney.api.rest.disney.entity.Character;
 import com.disney.api.rest.disney.entity.Movie;
 import com.disney.api.rest.disney.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +17,9 @@ import java.util.Map;
 public class MovieService {
     @Autowired
     private MovieRepository movieRepository;
+
+    @Autowired
+    private AmazonService amazonService;
 
     @Transactional
     public List<MovieDTO> getAll(){
@@ -33,21 +36,27 @@ public class MovieService {
     }
 
     @Transactional
-    public String create(Movie m){
+    public String create(Movie m, MultipartFile file){
+        m.setImage(amazonService.uploadFile(file));
         movieRepository.save(m);
         return "Movie created successfully";
     }
 
     @Transactional
-    public String update(Movie m) throws Exception {
+    public String update(Movie m, MultipartFile file) throws Exception {
         Movie movie = movieRepository.findById(m.getId()).orElseThrow(() -> new Exception(String.format("The movie not found", m.getId())));
 
         movie.setTitle(m.getTitle());
-        movie.setImage(m.getImage());
         movie.setCalification(m.getCalification());
         movie.setCreatedAt(m.getCreatedAt());
         movie.setGenre(m.getGenre());
         movie.setCharacters(m.getCharacters());
+
+        if(file.isEmpty()){
+            movie.setImage(m.getImage());
+        }else{
+            movie.setImage(amazonService.uploadFile(file));
+        }
 
         movieRepository.save(movie);
         return "Movie edited successfully";
@@ -55,8 +64,10 @@ public class MovieService {
 
     @Transactional
     public String delete(Integer id) throws Exception {
-        movieRepository.findById(id).orElseThrow(() -> new Exception(String.format("The movie not found", id)));
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new Exception(String.format("The movie not found", id)));
+        String image = movie.getImage();
         movieRepository.deleteById(id);
+        if(! image.isEmpty()) amazonService.deleteFileFromS3Bucket(image);
         return "Movie eliminated successfully";
     }
 

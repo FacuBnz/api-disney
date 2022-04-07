@@ -8,6 +8,7 @@ import com.disney.api.rest.disney.repository.CharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,9 @@ public class CharacterService {
 
     @Autowired
     private CharacterRepository characterRepository;
+
+    @Autowired
+    private AmazonService amazonService;
 
     @Transactional
     public List<CharacterDTO> getAll(){
@@ -86,29 +90,38 @@ public class CharacterService {
     }
 
     @Transactional
-    public String create(Character c){
+    public String create(Character c, MultipartFile file){
+        c.setImage(amazonService.uploadFile(file));
         characterRepository.save(c);
         return "Character created successfully";
     }
 
     @Transactional
-    public String update(Character c) throws Exception {
+    public String update(Character c, MultipartFile file) throws Exception {
         Character p = characterRepository.findById(c.getId()).orElseThrow(() -> new Exception(String.format("The character not found", c.getId())));
 
         p.setName(c.getName());
         p.setHistory(c.getHistory());
         p.setAge(c.getAge());
-        p.setImage(c.getImage());
         p.setWeight(c.getWeight());
         p.setMovies(c.getMovies());
+
+        if(file.isEmpty()){
+            p.setImage(c.getImage());
+        }else{
+            p.setImage(amazonService.uploadFile(file));
+        }
+
         characterRepository.save(p);
         return "Character edited successfully";
     }
 
     @Transactional
     public String delete(Integer id) throws Exception {
-        characterRepository.findById(id).orElseThrow(() -> new Exception(String.format("The character not found", id)));
+        Character character = characterRepository.findById(id).orElseThrow(() -> new Exception(String.format("The character not found", id)));
+        String image = character.getImage();
         characterRepository.deleteById(id);
+        if(! image.isEmpty()) amazonService.deleteFileFromS3Bucket(image);
         return "Character eliminated successfully";
     }
 }

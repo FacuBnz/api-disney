@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -46,9 +47,9 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Movie m){
+    public ResponseEntity<?> create(@Valid @ModelAttribute Movie m, @RequestPart(value = "file") MultipartFile file){
         try{
-            String message = movieService.create(m);
+            String message = movieService.create(m, file);
             Response res = new Response();
             res.setMessage(message);
             return ResponseEntity
@@ -64,9 +65,9 @@ public class MovieController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@Valid @RequestBody Movie movie){
+    public ResponseEntity<?> update(@Valid @RequestBody Movie movie, @RequestPart(value = "file") MultipartFile file){
         try{
-            String message = movieService.update(movie);
+            String message = movieService.update(movie, file);
             Response res = new Response();
             res.setMessage(message);
             return ResponseEntity
